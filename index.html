@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>跟我們一起去捐血吧！</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --apricot: #F5E6D3;
+    --apricot-light: #FAF3EC;
+    --apricot-mid: #EDD5B8;
+    --khaki: #B5956A;
+    --khaki-dark: #8C6E47;
+    --khaki-deep: #5C4530;
+    --warm-white: #FDFAF6;
+    --warm-gray: #9E8E7E;
+    --accent: #C97B4B;
+    --accent-light: #E8A97A;
+    --text-dark: #3A2D22;
+    --text-mid: #6B5240;
+    --text-light: #9E8070;
+    --red-soft: #D4524A;
+    --red-warm: #E8756B;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Serif TC', 'Georgia', serif;
+    background: var(--warm-white);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* Fade-in on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(253, 250, 246, 0.88);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(181, 149, 106, 0.18);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 20px rgba(92, 69, 48, 0.08); }
+  .nav-logo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--khaki-dark);
+    letter-spacing: 0.04em;
+  }
+  .nav-logo span { color: var(--red-soft); }
+  .nav-cta {
+    background: var(--accent);
+    color: var(--warm-white);
+    border: none;
+    padding: 0.5rem 1.3rem;
+    border-radius: 50px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, transform 0.15s;
+    font-family: inherit;
+  }
+  .nav-cta:hover { background: var(--khaki-dark); transform: scale(1.04); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(160deg, var(--apricot-light) 0%, var(--apricot) 55%, var(--apricot-mid) 100%);
+    padding: 6rem 2rem 4rem;
+    text-align: center;
+  }
+  .hero-bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  .hero-bg-circle.c1 {
+    width: 520px; height: 520px;
+    background: var(--accent);
+    top: -120px; right: -80px;
+  }
+  .hero-bg-circle.c2 {
+    width: 320px; height: 320px;
+    background: var(--khaki);
+    bottom: -60px; left: -60px;
+  }
+  .hero-inner { position: relative; max-width: 780px; }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(201, 123, 75, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(201, 123, 75, 0.3);
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.6rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 900;
+    color: var(--khaki-deep);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.4rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--red-soft);
+  }
+  .hero-sub {
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    color: var(--text-mid);
+    line-height: 1.85;
+    max-width: 540px;
+    margin: 0 auto 2.4rem;
+    font-weight: 400;
+  }
+  .hero-btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--warm-white);
+    border: none;
+    padding: 0.9rem 2.4rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    font-family: inherit;
+    box-shadow: 0 6px 24px rgba(201, 123, 75, 0.3);
+  }
+  .btn-primary:hover { background: var(--khaki-dark); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(140, 110, 71, 0.35); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--khaki-dark);
+    border: 1.5px solid var(--khaki);
+    padding: 0.9rem 2.2rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, transform 0.15s;
+    font-family: inherit;
+  }
+  .btn-secondary:hover { background: rgba(181, 149, 106, 0.1); transform: translateY(-2px); }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    color: var(--text-light);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    animation: bounce 2.4s ease-in-out infinite;
+  }
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1px; height: 36px;
+    background: linear-gradient(to bottom, var(--khaki), transparent);
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ABOUT */
+  .about {
+    padding: 6rem 2rem;
+    background: var(--warm-white);
+  }
+  .section-inner { max-width: 1040px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+  .section-title {
+    font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+    font-weight: 800;
+    color: var(--khaki-deep);
+    line-height: 1.25;
+    margin-bottom: 1.4rem;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 3.5rem;
+  }
+  .about-text p {
+    font-size: 1.05rem;
+    color: var(--text-mid);
+    line-height: 1.95;
+    margin-bottom: 1.1rem;
+  }
+  .about-visual {
+    background: var(--apricot);
+    border-radius: 24px;
+    padding: 2.5rem;
+    display: flex; flex-direction: column; gap: 1.2rem;
+  }
+  .stat-card {
+    background: var(--warm-white);
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+    border: 1px solid rgba(181, 149, 106, 0.2);
+  }
+  .stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--apricot-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .stat-text strong {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--khaki-deep);
+    line-height: 1;
+  }
+  .stat-text span {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* HIGHLIGHTS */
+  .highlights {
+    padding: 6rem 2rem;
+    background: var(--apricot-light);
+  }
+  .highlights-header { text-align: center; margin-bottom: 3.5rem; }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 0;
+  }
+  .highlight-card {
+    background: var(--warm-white);
+    border-radius: 20px;
+    padding: 2.2rem 2rem;
+    border: 1px solid rgba(181, 149, 106, 0.2);
+    transition: transform 0.25s, box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .highlight-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 20px 20px 0 0;
+  }
+  .highlight-card:nth-child(1)::before { background: var(--red-warm); }
+  .highlight-card:nth-child(2)::before { background: var(--khaki); }
+  .highlight-card:nth-child(3)::before { background: var(--accent); }
+  .highlight-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(92, 69, 48, 0.1); }
+  .card-num {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--apricot-mid);
+    line-height: 1;
+    margin-bottom: 0.8rem;
+    font-family: 'Georgia', serif;
+  }
+  .card-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  .card-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--khaki-deep);
+    margin-bottom: 0.8rem;
+    line-height: 1.3;
+  }
+  .card-body {
+    font-size: 0.93rem;
+    color: var(--text-mid);
+    line-height: 1.8;
+  }
+  .gifts-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .gift-tag {
+    background: var(--apricot);
+    color: var(--khaki-dark);
+    padding: 0.28rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(181, 149, 106, 0.3);
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    padding: 6rem 2rem;
+    background: var(--apricot);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '🩸';
+    position: absolute;
+    font-size: 18rem;
+    opacity: 0.04;
+    top: -2rem; left: -2rem;
+    pointer-events: none;
+    line-height: 1;
+  }
+  .cta-inner { position: relative; max-width: 600px; margin: 0 auto; }
+  .cta-title {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    color: var(--khaki-deep);
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+  }
+  .cta-sub {
+    font-size: 1.05rem;
+    color: var(--text-mid);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+  .cta-big-btn {
+    display: inline-block;
+    background: var(--red-soft);
+    color: var(--warm-white);
+    border: none;
+    padding: 1.1rem 3rem;
+    border-radius: 50px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    font-family: inherit;
+    box-shadow: 0 8px 28px rgba(212, 82, 74, 0.28);
+    text-decoration: none;
+  }
+  .cta-big-btn:hover { background: #B8403A; transform: translateY(-3px); box-shadow: 0 14px 40px rgba(212, 82, 74, 0.38); }
+
+  .cta-note {
+    margin-top: 1.4rem;
+    font-size: 0.83rem;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--khaki-deep);
+    color: rgba(253, 250, 246, 0.65);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.83rem;
+    letter-spacing: 0.03em;
+  }
+  footer strong { color: rgba(253, 250, 246, 0.9); }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    nav { padding: 0.9rem 1.2rem; }
+    .hero { padding: 5rem 1.2rem 3.5rem; }
+    .about { padding: 4rem 1.2rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .highlights { padding: 4rem 1.2rem; }
+    .cta-section { padding: 4.5rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo"><span>❤</span> 捐血計畫</div>
+  <button class="nav-cta" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">立即報名</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-circle c1"></div>
+  <div class="hero-bg-circle c2"></div>
+  <div class="hero-inner">
+    <div class="hero-tag reveal">愛心捐血活動</div>
+    <h1 class="reveal reveal-delay-1">和我們一起捐血<br><em>幫助人～</em></h1>
+    <p class="hero-sub reveal reveal-delay-2">
+      一袋血，可以挽救三條生命。<br>
+      加入我們，讓愛流動，讓世界更溫暖。
+    </p>
+    <div class="hero-btns reveal reveal-delay-3">
+      <button class="btn-primary" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">立即報名</button>
+      <button class="btn-secondary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">了解更多</button>
+    </div>
+  </div>
+  <div class="hero-scroll">scroll</div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="section-label reveal">關於我們</p>
+        <h2 class="section-title reveal reveal-delay-1">一起回饋社會<br>讓愛無限傳遞</h2>
+        <p class="reveal reveal-delay-2">
+          我們希望透過這個活動，招攬更多熱心、有愛的人一起加入捐血的行列。每一次捐血，都是一份無私的給予——你不僅僅是在幫助陌生人，更是在傳遞人與人之間最純粹的善意。
+        </p>
+        <p class="reveal reveal-delay-2">
+          不只是幫助他人，捐血對自己的身體也有好處！來和我們一起做善事，還能領取豐富好禮，讓這份愛更加甜蜜。
+        </p>
+        <p class="reveal reveal-delay-3">
+          每位參與者都能獲得免費健康檢查報告，讓你更了解自己的身體狀況。善意的循環，從你開始。
+        </p>
+      </div>
+      <div class="about-visual reveal reveal-delay-2">
+        <div class="stat-card">
+          <div class="stat-icon">🩸</div>
+          <div class="stat-text">
+            <strong>每 3 秒</strong>
+            <span>就有人需要輸血</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💝</div>
+          <div class="stat-text">
+            <strong>一次捐血</strong>
+            <span>最多可救 3 條生命</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎁</div>
+          <div class="stat-text">
+            <strong>豐富好禮</strong>
+            <span>感謝你的愛心付出</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-text">
+            <strong>免費健檢報告</strong>
+            <span>了解自身健康狀況</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HIGHLIGHTS -->
+<section class="highlights" id="highlights">
+  <div class="section-inner">
+    <div class="highlights-header">
+      <p class="section-label reveal">為什麼要捐血</p>
+      <h2 class="section-title reveal reveal-delay-1">捐血的三大亮點</h2>
+    </div>
+    <div class="cards-grid">
+      <div class="highlight-card reveal reveal-delay-1">
+        <div class="card-num">01</div>
+        <div class="card-icon">🎁</div>
+        <h3 class="card-title">得到好康・豐富好禮</h3>
+        <p class="card-body">感謝每一位愛心捐血者，我們為你準備了滿滿的回饋禮物！憑捐血證明即可兌換以下好禮：</p>
+        <div class="gifts-row">
+          <span class="gift-tag">全聯福利券</span>
+          <span class="gift-tag">免費濕紙巾</span>
+          <span class="gift-tag">飲品一杯</span>
+          <span class="gift-tag">小餅乾點心</span>
+        </div>
+      </div>
+      <div class="highlight-card reveal reveal-delay-2">
+        <div class="card-num">02</div>
+        <div class="card-icon">💪</div>
+        <h3 class="card-title">了解身體・促進新陳代謝</h3>
+        <p class="card-body">捐血前的例行檢查能讓你掌握血壓、血型及血液健康狀況。捐血後，身體會啟動造血機制，促進細胞更新、活化新陳代謝，對健康大有幫助！</p>
+      </div>
+      <div class="highlight-card reveal reveal-delay-3">
+        <div class="card-num">03</div>
+        <div class="card-icon">🌟</div>
+        <h3 class="card-title">做善事・善有善報</h3>
+        <p class="card-body">每一滴血都承載著希望。你的善意將流向需要幫助的病患，讓他們重獲新生。好人有好報，把愛傳出去，世界因你而更美好。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="cta-inner">
+    <p class="section-label reveal">立即行動</p>
+    <h2 class="cta-title reveal reveal-delay-1">你的一小步<br>是別人的一大步</h2>
+    <p class="cta-sub reveal reveal-delay-2">
+      報名只需一分鐘，捐血大約 30 分鐘，<br>
+      但那份愛，卻可以延續一輩子。
+    </p>
+    <div class="reveal reveal-delay-3">
+      <a href="#" class="cta-big-btn" onclick="alert('感謝你的愛心！我們將盡快與你聯繫 💝'); return false;">立即報名</a>
+    </div>
+    <p class="cta-note reveal reveal-delay-4">
+      ✦ 年滿 17 歲・體重 50kg 以上・身體健康即可參與<br>
+      ✦ 活動期間限定，好禮數量有限，先報名先得
+    </p>
+  </div>
+</section>
+
+<footer>
+  <strong>捐血計畫 × 愛心傳遞</strong> &nbsp;|&nbsp; 讓每一份愛都流向需要的人 &nbsp;🩸
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  revealEls.forEach(el => observer.observe(el));
+
+  document.querySelectorAll('.highlight-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      card.style.transition = 'transform 0.25s, box-shadow 0.25s';
+    });
+  });
+</script>
+</body>
+</html>
